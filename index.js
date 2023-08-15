@@ -1,5 +1,7 @@
 const users = [];
 
+let loggedInUser = null;
+
 function createUser(username, password) {
     if (users.some(user => user.username === username)) {
         console.log('Usuário já cadastrado!')
@@ -16,8 +18,9 @@ function createUser(username, password) {
 }
 
 function login(username, password) {
-    if (users.find(user => user.username === username && user.password === password)) {
-        console.log(listTasks(username));
+    const user = users.find(user => user.username === username && user.password === password);
+    if (user) {
+        loggedInUser = user;
     } else if (!username || !password) {
         console.log('Insira usuário ou senha!');
     } else {
@@ -40,7 +43,7 @@ function createTask(title, description, username) {
         if (userIndex === -1) {
             console.log("Usuário não encontrado");
         } else {
-            users[userIndex].tasks.push(task);
+            loggedInUser.tasks.push(task);
         }
     }
 }
@@ -51,7 +54,7 @@ function listTasks(username) {
     if (userIndex === -1) {
         console.log("Usuário não encontrado");
     } else {
-      users[userIndex].tasks.forEach((element, index) => console.log(`Index: ${index}, Título: ${element.title}, Descrição: ${element.description}, Completo: ${element.completed ? "Sim" : "Não"}`));
+      loggedInUser.tasks.forEach((element, index) => console.log(`Index: ${index}, Título: ${element.title}, Descrição: ${element.description}, Completo: ${element.completed ? "Sim" : "Não"}`));
     }
 
 }
@@ -61,10 +64,10 @@ function updateTaskStatus(index, isCompleted, username) {
     if (userIndex === -1) {
         console.log('Usuário não encontrado!');
     } else {
-        if (index < 0 || index >= users[userIndex].tasks.length) {
+        if (index < 0 || index >= loggedInUser.tasks.length) {
           console.log("Índice não econtrado");
         } else {
-          users[userIndex].tasks[index].completed = isCompleted;
+          loggedInUser.tasks[index].completed = isCompleted;
         }
     }
 }
@@ -74,11 +77,11 @@ function updateTask(index, newTitle, newDescription, username) {
     if(userIndex === -1) {
         console.log("Índice não encontrado");
     } else {
-        if (index < 0 || index >= users[userIndex].tasks.length) {
+        if (index < 0 || index >= loggedInUser.tasks.length) {
           console.log("Índice não econtrado");
         } else {
-          users[userIndex].tasks[index].title = newTitle;
-          users[userIndex].tasks[index].description = newDescription;
+          loggedInUser.tasks[index].title = newTitle;
+          loggedInUser.tasks[index].description = newDescription;
         }
     }
 }
@@ -88,15 +91,16 @@ function deleteTask(index, username) {
     if (userIndex === -1) {
         console.log('Usuário não encontrado');
     } else {
-        if (index < 0 || index >= users[userIndex].tasks.length) {
+        if (index < 0 || index >= loggedInUser.tasks.length) {
           console.log("Índice não encontrado");
         } else {
-          users[userIndex].tasks.splice(index, 1);
+          loggedInUser.tasks.splice(index, 1);
         }
     }
 }
 
 createUser('Maynard', '123');
 createUser('Areirom', '321');
-createTask("a", "a", "Areirom");
 console.log(login('Areirom', '321'));
+createTask("a", "a", "Areirom");
+listTasks('Areirom');
